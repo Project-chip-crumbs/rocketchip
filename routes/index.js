@@ -37,7 +37,12 @@ function execChildProcess(cmd) {
       console.log('Program output:', stdout);
       console.log('Program stderr:', stderr);
 
-      if (stdout) resolve(stdout);
+      if (code === 0) {
+        resolve(stdout);
+      }
+      else {
+        reject(stderr);
+      }
     });
 
   });
@@ -45,16 +50,18 @@ function execChildProcess(cmd) {
 
 router.get('/', function(req, res, next) {
   // Initial Setup
-  // spawnChildProcess('sudo sh', ['-c', 'echo 409 > /sys/class/gpio/export'])
-  
-  // .then(function (data) {
-  //   spawnChildProcess('sudo sh', ['-c', 'echo out > /sys/class/gpio/gpio409/direction'])
 
   execChildProcess("sudo sh -c 'echo 409 > /sys/class/gpio/export'")
+
   .then(function (data) {
+    execChildProcess("sudo sh -c 'echo out > /sys/class/gpio/gpio409/direction'")
+
+    .then(function (data) {
+      console.log('Finished setup');
       res.render('index.ejs', {'title': 'RocketCHIP'});
+    });
   });
-  // });
+  
 });
 
 router.post('/trigger/on', function (req, res) {
