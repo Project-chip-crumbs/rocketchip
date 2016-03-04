@@ -3,6 +3,8 @@ var fs = require('fs');
 var Promise = require('bluebird');
 var router = express.Router();
 
+// TODO: Error checking
+
 router.get('/', function(req, res, next) {
   // Initial Setup
   fs.writeFile('/sys/class/gpio/export', '409', function(err) {
