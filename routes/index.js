@@ -28,15 +28,17 @@ function spawnChildProcess(cmd, args) {
 
 router.get('/', function(req, res, next) {
   // Initial Setup
-  spawnChildProcess('sudo sh', ['-c', 'echo 409 > /sys/class/gpio/export'])
-
+  var shellSyntaxCommand = 'ls -l | grep test | wc -c';
+  spawnChildProcess('sh', ['-c', shellSyntaxCommand], { stdio: 'inherit' })
+  // spawnChildProcess('sudo sh', ['-c', 'echo 409 > /sys/class/gpio/export'])
+  
   .then(function (data) {
-    spawnChildProcess('sudo sh', ['-c', 'echo out > /sys/class/gpio/gpio409/direction'])
+  //   spawnChildProcess('sudo sh', ['-c', 'echo out > /sys/class/gpio/gpio409/direction'])
 
-    .then(function (data) {
+  //   .then(function (data) {
       res.render('index.ejs', {'title': 'RocketCHIP'});
     });
-  });
+  // });
 });
 
 router.post('/trigger/on', function (req, res) {
