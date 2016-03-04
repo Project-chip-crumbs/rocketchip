@@ -1,6 +1,9 @@
 var express = require('express');
 var Promise = require('bluebird');
 var router = express.Router();
+
+var fs = require('fs');
+
 require('shelljs/global');
 
 function execChildProcess(cmd) {
@@ -23,23 +26,31 @@ function execChildProcess(cmd) {
 }
 
 router.get('/', function(req, res, next) {
-  // Initial Setup
-  execChildProcess("sudo sh -c 'echo 409 > /sys/class/gpio/export'")
+	fs.writeFile('/sys/class/gpio/export', '409', function(err) {
+		fs.writeFile('/sys/class/gpio409/direction', 'out', function(err) {
+			fs.writeFile('/sys/class/gpio409/value', '0', function(err) {
+			        console.log('Finished setup');
+			        res.render('index.ejs', {'title': 'RocketCHIP'});
+			});
+		});
+	});
 
-  .then(function (data) {
+/*
+  // Initial Setup
+//  execChildProcess("sudo sh -c 'echo 409 > /sys/class/gpio/export'")
+
+ //  .then(function (data) {
     execChildProcess("sudo sh -c 'echo out > /sys/class/gpio/gpio409/direction'")
 
     .then(function (data) {
       execChildProcess("sudo sh -c 'echo 0 > /sys/class/gpio/gpio409/value'")
 
       .then(function (data) {
-        console.log('Finished setup');
-        res.render('index.ejs', {'title': 'RocketCHIP'});
       });
 
     });
-  });
-  
+//  });
+  */
 });
 
 router.post('/trigger/on', function (req, res) {
