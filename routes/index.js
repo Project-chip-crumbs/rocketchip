@@ -1,43 +1,59 @@
 var express = require('express');
-var spawn = require('child_process').spawn;
+// var spawn = require('child_process').spawn;
+// var exec = require('child_process').exec;
 var Promise = require('bluebird');
 var router = express.Router();
 
-function spawnChildProcess(cmd, args) {
-  if (!args) args = [];
+require('shelljs/global');
 
+// function spawnChildProcess(cmd, args) {
+//   if (!args) args = [];
+
+//   return new Promise(function (resolve, reject) {
+
+//     var child = spawn(cmd, args);
+
+//     child.stdout.on('data', (data) => {
+//       console.log(`stdout: ${data}`);
+//       resolve(data);
+//     });
+
+//     child.stderr.on('data', (data) => {
+//       console.log(`stderr: ${data}`);
+//       reject(data);
+//     });
+
+//     child.on('close', (code) => {
+//       console.log(`child process exited with code ${code}`);
+//     });
+//   });
+// }
+
+function execChildProcess(cmd) {
   return new Promise(function (resolve, reject) {
 
-    var child = spawn(cmd, args);
+    exec(cmd, function(code, stdout, stderr) {
+      console.log('Exit code:', code);
+      console.log('Program output:', stdout);
+      console.log('Program stderr:', stderr);
 
-    child.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-      resolve(data);
+      if (stdout) resolve(stdout);
     });
 
-    child.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-      reject(data);
-    });
-
-    child.on('close', (code) => {
-      console.log(`child process exited with code ${code}`);
-    });
   });
 }
 
 router.get('/', function(req, res, next) {
   // Initial Setup
-  var shellSyntaxCommand = 'ls -l | grep test | wc -c';
-  spawnChildProcess('sh', ['-c', shellSyntaxCommand], { stdio: 'inherit' })
   // spawnChildProcess('sudo sh', ['-c', 'echo 409 > /sys/class/gpio/export'])
   
-  .then(function (data) {
+  // .then(function (data) {
   //   spawnChildProcess('sudo sh', ['-c', 'echo out > /sys/class/gpio/gpio409/direction'])
 
-  //   .then(function (data) {
+  execChildProcess("sudo sh -c 'echo 409 > /sys/class/gpio/export'")
+  .then(function (data) {
       res.render('index.ejs', {'title': 'RocketCHIP'});
-    });
+  });
   // });
 });
 
