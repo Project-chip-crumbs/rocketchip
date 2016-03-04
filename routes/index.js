@@ -1,33 +1,7 @@
 var express = require('express');
-// var spawn = require('child_process').spawn;
-// var exec = require('child_process').exec;
 var Promise = require('bluebird');
 var router = express.Router();
-
 require('shelljs/global');
-
-// function spawnChildProcess(cmd, args) {
-//   if (!args) args = [];
-
-//   return new Promise(function (resolve, reject) {
-
-//     var child = spawn(cmd, args);
-
-//     child.stdout.on('data', (data) => {
-//       console.log(`stdout: ${data}`);
-//       resolve(data);
-//     });
-
-//     child.stderr.on('data', (data) => {
-//       console.log(`stderr: ${data}`);
-//       reject(data);
-//     });
-
-//     child.on('close', (code) => {
-//       console.log(`child process exited with code ${code}`);
-//     });
-//   });
-// }
 
 function execChildProcess(cmd) {
   return new Promise(function (resolve, reject) {
@@ -50,15 +24,19 @@ function execChildProcess(cmd) {
 
 router.get('/', function(req, res, next) {
   // Initial Setup
-
   execChildProcess("sudo sh -c 'echo 409 > /sys/class/gpio/export'")
 
   .then(function (data) {
     execChildProcess("sudo sh -c 'echo out > /sys/class/gpio/gpio409/direction'")
 
     .then(function (data) {
-      console.log('Finished setup');
-      res.render('index.ejs', {'title': 'RocketCHIP'});
+      execChildProcess("sudo sh -c 'echo 0 > /sys/class/gpio/gpio409/value'")
+
+      .then(function (data) {
+        console.log('Finished setup');
+        res.render('index.ejs', {'title': 'RocketCHIP'});
+      });
+
     });
   });
   
@@ -67,7 +45,7 @@ router.get('/', function(req, res, next) {
 router.post('/trigger/on', function (req, res) {
   console.log('/trigger/on: On Button was pushed!');
 
-  spawnChildProcess('sudo sh', ['-c', 'echo 0 > /sys/class/gpio/gpio409/value'])
+  execChildProcess("sudo sh -c 'echo 1 > /sys/class/gpio/gpio409/value'")
   .then(function (data) {
     res.sendStatus(200);
   });
@@ -76,7 +54,7 @@ router.post('/trigger/on', function (req, res) {
 router.post('/trigger/off', function (req, res) {
   console.log('/trigger/off: Trigger off!');
 
-  spawnChildProcess('sudo sh', ['-c', 'echo 1 > /sys/class/gpio/gpio409/value'])
+  execChildProcess("sudo sh -c 'echo 0 > /sys/class/gpio/gpio409/value'")
   .then(function (data) {
     res.sendStatus(200);
   });
