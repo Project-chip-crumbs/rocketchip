@@ -1,6 +1,5 @@
 var express = require('express');
 var fs = require('fs');
-var Promise = require('bluebird');
 var router = express.Router();
 
 // TODO: Error checking
@@ -20,7 +19,7 @@ router.get('/', function(req, res, next) {
 router.post('/trigger/on', function (req, res) {
   console.log('/trigger/on: On Button was pushed!');
 
-  fs.writeFile('/sys/class/gpio/gpio409/value', '1', function(err) {
+  fs.writeFile('/sys/class/gpio/gpio409/value', '0', function(err) {
     res.sendStatus(200);
   });
 });
@@ -28,7 +27,7 @@ router.post('/trigger/on', function (req, res) {
 router.post('/trigger/off', function (req, res) {
   console.log('/trigger/off: Trigger off!');
 
-  fs.writeFile('/sys/class/gpio/gpio409/value', '0', function(err) {
+  fs.writeFile('/sys/class/gpio/gpio409/value', '1', function(err) {
     res.sendStatus(200);
   });
 });
