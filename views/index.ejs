@@ -5,11 +5,14 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-
-    <button class="on-btn">ON</button>
-    <button class="off-btn">OFF</button>
+    <div class="master-container">
+      <div class="space inactive"></div>
+      <div class="grounded"></div>
+      <div class="switch-button">
+        <div class="switch-button-case left active">nope</div>
+        <div class="switch-button-case right">boom</div>
+      </div>
+    </div>
 
     <script src="/javascripts/bundle.js"></script>
   </body>

@@ -1,8 +1,68 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #474747;
 }
 
-a {
-  color: #00B7FF;
+.master-container {
+  margin: 0 auto;
+  min-width: 480px;
+  min-height: 150px;
+  max-width: 480px;
+  max-height: 150px;
+  position: relative;
+}
+.master-container .grounded, .master-container .space {
+  min-width: 480px;
+  min-height: 150px;
+  max-width: 480px;
+  max-height: 150px;
+  animation-duration: 350ms;
+}
+.master-container .grounded .active, .master-container .space .active {
+  opacity: 1;
+}
+.master-container .grounded .inactive, .master-container .space .inactive {
+  opacity: 0;
+}
+.master-container .grounded {
+  background: url("/images/groundSky.png");
+}
+.master-container .space {
+  background: url("/images/spaceSky.png");
+}
+
+.switch-button {
+  border-radius: 4px;
+  width: 220px;
+  height: 40px;
+  text-align: center;
+  position: absolute;
+  left: 70%;
+  top: 70px;
+  transform: translate3D(-50%, -50%, 0);
+  will-change: transform;
+  z-index: 197 !important;
+  cursor: pointer;
+  transition: 350ms ease all;
+  border: 1px solid #EB008B;
+  display: flex;
+  font-family: 'Helvetica', sans-serif;
+  text-transform: uppercase;
+  color: #EB008B;
+}
+.switch-button-case {
+  height: 100%;
+  display: flex;
+  flex-basis: 50%;
+  align-items: center;
+  justify-content: center;
+}
+.switch-button-case:hover {
+  transition: all 350ms;
+  color: #00AEEF;
+}
+.switch-button-case.active {
+  background: #EB008B;
+  color: #fff;
 }
